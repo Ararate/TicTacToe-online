@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JYVuKwU3kD4scIvVUAf10chLr3DhIp9fLWUOCtHJiZwGpBRYwQkgSoP/bfQQfu8M4lC1eRHfCaehZJii2VXoaQ==",
+  "dgSpecHash": "nUG+Ux1+ZpTCwO+EFeHud74STtAiXnLD3FDmLZtkDQArjetwKkjMYDlabCC106MlMf6qlsuZtyH7g1Gyep4g2Q==",
   "success": true,
   "projectFilePath": "D:\\TicTacToe\\TTT\\TTT\\TTT.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,8 @@
     "C:\\Users\\User\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\signalrswaggergen\\4.4.0\\signalrswaggergen.4.4.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\signalrswaggergen.core\\1.0.0\\signalrswaggergen.core.1.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",

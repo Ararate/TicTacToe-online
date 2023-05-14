@@ -1,5 +1,8 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TTT.Data;
 using TTT.Globals;
+using TTT.Hubs;
 using TTT.Models;
 using TTT.Utility;
 
@@ -15,7 +19,16 @@ namespace TTT.Services
 {
     public class GameService
     {
-        private readonly List<Game> _games = new();
+        private readonly List<Game> _games;
+        private readonly IHubContext<GameHub> _hub;
+        private readonly DataBase _db;
+
+        public GameService(IHubContext<GameHub> hubContext, DataBase db, List<Game> games)
+        {
+            _hub = hubContext;
+            _db = db;
+            _games = games;
+        }
 
         public ServiceResponse Create(string hostName)
         {
@@ -25,17 +38,21 @@ namespace TTT.Services
                 Host = hostName 
             };
             _games.Add(newGame);
-            return new ServiceResponse(ResponseType.Finish);
+            return new ServiceResponse(ResponseType.Success);
         }
 
-        public ServiceResponse Delete(string hostName)
+        public async Task<ServiceResponse> Delete(string hostName)
         {
             Game? game = _games.FirstOrDefault(x => x.Host == hostName);
             if (game == null) 
-                return new ServiceResponse(ResponseType.NotFound, "Комната не создана");
+                return new ServiceResponse(ResponseType.NotFound, "Комната не найдена");
 
             _games.Remove(game);
-            return new ServiceResponse(ResponseType.Finish);
+            GameDTO dto = new GameDTO() { Message = "Игра удалена" };
+            if (!string.IsNullOrEmpty(game.Guest))
+                await _hub.Clients.User(game.Guest)
+                    .SendAsync(LC.HubMethodGetData, dto);
+            return new ServiceResponse(ResponseType.Success);
         }
 
         public List<Game> GetRooms()
@@ -43,7 +60,7 @@ namespace TTT.Services
             return _games;
         }
 
-        public ServiceResponse Join(string hostName, string guestName)
+        public async Task<ServiceResponse> Join(string hostName, string guestName)
         {
             Game? game = _games.FirstOrDefault(x => x.Host == hostName);
             if (game == null)
@@ -56,11 +73,12 @@ namespace TTT.Services
             game.Guest = guestName;
             Random rand = new();
             game.CurrentMover = rand.Next(1, 2) == 1 ? game.Guest : game.Host;
-            game.Awaiter.TrySetResult(true);
-            return new ServiceResponse(ResponseType.Finish, data: game);
+            await _hub.Clients.User(hostName)
+                .SendAsync(LC.HubMethodGetGuest, new GameDTO() { Opponent = guestName });
+            return new ServiceResponse(ResponseType.Success, data: game);
         }
 
-        public ServiceResponse Move(string moverName, int x, int y)
+        public async Task<ServiceResponse> Move(string moverName, int x, int y)
         {
             IEnumerable<Game> games = _games.Where(x => x.Host == moverName || x.Guest == moverName);
             if (!games.Any())
@@ -85,37 +103,44 @@ namespace TTT.Services
             bool col = Has3InRow(game.Field.GetColumn(x));
 
             if (row || col || mainDiag || antiDiag)
-                return new ServiceResponse(ResponseType.Finish, data: game);
+            {
+                GameResult results = new()
+                {
+                    Draw = false,
+                    GuestName = game.Guest,
+                    HostName = game.Host,
+                    Winner = game.CurrentMover
+                };
+                _db.Add(results);
+                _db.SaveChanges();
+                await _hub.Clients.User(game.Guest)
+                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
+                await _hub.Clients.User(game.Host)
+                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
+                return new ServiceResponse(ResponseType.Success, data: game);
+            }
 
             game.MoveCount++;
             if (game.MoveCount == 9)
+            {
+                GameResult results = new()
+                {
+                    Draw = true,
+                    GuestName = game.Guest,
+                    HostName = game.Host
+                };
+                _db.Add(results);
+                _db.SaveChanges();
+                await _hub.Clients.User(game.Guest)
+                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
+                await _hub.Clients.User(game.Host)
+                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
                 return new ServiceResponse(ResponseType.Draw, data: game);
+            }
             game.CurrentMover = moverName == game.Host ? game.Guest : game.Host;
-            game.X = x;
-            game.Y = y;
+            await _hub.Clients.User(game.CurrentMover)
+                .SendAsync(LC.HubMethodGetData, new GameDTO() { X=x,Y=y,Opponent=moverName });
             return new ServiceResponse(ResponseType.Continue, data: game);
-        }
-
-        public Game? GetGame(string playerName)
-        {
-            IEnumerable<Game> games = _games.Where(x => x.Host == playerName || x.Guest == playerName);
-            if (!games.Any())
-                return null;
-            if (games.Count() > 1 || games.First().Host == games.First().Guest)
-                return null;
-
-            return games.First();
-        }
-
-        public async Task<bool> Wait(Game game)
-        {
-            var timer = new System.Timers.Timer(120000);
-            timer.Elapsed += (source,args) => game.Awaiter.TrySetResult(false);
-            timer.Start();
-            game.Awaiter = new();
-            await game.Awaiter.Task;
-            timer.Stop();
-            return game.Awaiter.Task.Result;
         }
 
         private bool Has3InRow(char[] row)
@@ -125,6 +150,5 @@ namespace TTT.Services
                     return true;
             return false;
         }
-
     }
 }

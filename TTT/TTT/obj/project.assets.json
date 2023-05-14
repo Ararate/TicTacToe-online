@@ -712,6 +712,36 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
         }
       },
+      "SignalRSwaggerGen/4.4.0": {
+        "type": "package",
+        "dependencies": {
+          "SignalRSwaggerGen.Core": "1.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/SignalRSwaggerGen.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/SignalRSwaggerGen.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "SignalRSwaggerGen.Core/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/SignalRSwaggerGen.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/SignalRSwaggerGen.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Swashbuckle.AspNetCore/6.2.3": {
         "type": "package",
         "dependencies": {
@@ -2305,6 +2335,40 @@
         "mono.texttemplating.nuspec"
       ]
     },
+    "SignalRSwaggerGen/4.4.0": {
+      "sha512": "DruMT9W2uzFayeuYtsPMyIynUyh8mZiPtckxkXK/VOiLILCxWUlBxFleUeb2SIZwLS97VFQ0i7uv4ghUq6e4aw==",
+      "type": "package",
+      "path": "signalrswaggergen/4.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "Logo.png",
+        "lib/netstandard2.0/SignalRSwaggerGen.dll",
+        "lib/netstandard2.0/SignalRSwaggerGen.xml",
+        "lib/netstandard2.1/SignalRSwaggerGen.dll",
+        "lib/netstandard2.1/SignalRSwaggerGen.xml",
+        "signalrswaggergen.4.4.0.nupkg.sha512",
+        "signalrswaggergen.nuspec"
+      ]
+    },
+    "SignalRSwaggerGen.Core/1.0.0": {
+      "sha512": "Sx9hZXXqE9ynul/uRofVm4e9SqJYm5CpXgZJI/w0Hog6SLYuDHc0pO7SE6pUztbeYb6p2QZOQ7pG/mFFpDPUlA==",
+      "type": "package",
+      "path": "signalrswaggergen.core/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "Logo.png",
+        "lib/netstandard2.0/SignalRSwaggerGen.Core.dll",
+        "lib/netstandard2.0/SignalRSwaggerGen.Core.xml",
+        "lib/netstandard2.1/SignalRSwaggerGen.Core.dll",
+        "lib/netstandard2.1/SignalRSwaggerGen.Core.xml",
+        "signalrswaggergen.core.1.0.0.nupkg.sha512",
+        "signalrswaggergen.core.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/6.2.3": {
       "sha512": "cnzQDn0Le+hInsw2SYwlOhOCPXpYi/szcvnyqZJ12v+QyrLBwAmWXBg6RIyHB18s/mLeywC+Rg2O9ndz0IUNYQ==",
       "type": "package",
@@ -3767,6 +3831,7 @@
       "Microsoft.EntityFrameworkCore >= 7.0.5",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.5",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.5",
+      "SignalRSwaggerGen >= 4.4.0",
       "Swashbuckle.AspNetCore >= 6.2.3",
       "System.IdentityModel.Tokens.Jwt >= 6.30.0"
     ]
@@ -3827,6 +3892,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.5, )"
+          },
+          "SignalRSwaggerGen": {
+            "target": "Package",
+            "version": "[4.4.0, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

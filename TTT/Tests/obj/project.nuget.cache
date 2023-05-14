@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "m14n7T6wsh44mJShOxx+2o82cbexwF3l9IEKi7FySvZBbEgpB6mFbyLqK6/OXHdQ647Yprffp1d62dK1/MFbow==",
+  "dgSpecHash": "w7GC+5P87808xyPLC9CxApDg1qkv3kJ7x8F1zQcIKupVw9+tkbzQ48E7SzOoaFZWJay/kg3y7/tJigR4SPVifg==",
   "success": true,
   "projectFilePath": "D:\\TicTacToe\\TTT\\Tests\\Tests.csproj",
   "expectedPackageFiles": [
@@ -65,6 +65,8 @@
     "C:\\Users\\User\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\signalrswaggergen\\4.4.0\\signalrswaggergen.4.4.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\signalrswaggergen.core\\1.0.0\\signalrswaggergen.core.1.0.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.2.3\\swashbuckle.aspnetcore.swaggergen.6.2.3.nupkg.sha512",

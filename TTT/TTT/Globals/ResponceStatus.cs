@@ -2,7 +2,7 @@
 {
     public enum ResponseType
     {
-        Finish = 0,
+        Success = 0,
         BadRequest = 1,
         ServerError = 2,
         NotFound = 3,

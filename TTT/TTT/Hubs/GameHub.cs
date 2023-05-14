@@ -1,20 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using SignalRSwaggerGen.Attributes;
 using System.Threading.Tasks;
+using TTT.Models;
 
 namespace TTT.Hubs
 {
     [Authorize]
+    [SignalRHub]
     public class GameHub : Hub
     {
-        
-        public async Task JoinGame(string hostName, string guestName)
+        [SignalRMethod]
+        public GameDTO GetGuest(GameDTO dto)
         {
-            await Clients.User(hostName).SendAsync("WaitGuest", guestName);
-        }
-        public async Task Move(int x, int y)
-        {
-
+            return dto;
         }
     }
 }

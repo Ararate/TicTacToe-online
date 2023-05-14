@@ -9,11 +9,7 @@
         public const char O = '0';
         public const char X = 'X';
 
-        public const string DrawStatus = "Ничья";
-        public const string LostStatus = "Проигрыш";
-        public const string WinStatus = "Победа";
-        public const string ErrorStatus = "Ошибка";
-        public const string TimeoutStatus = "Время ожидания превышено";
-        public const string BeginStatus = "Соперник найден";
+        public const string HubMethodGetData = "GetGameData";
+        public const string HubMethodGetGuest = "GetGuest";
     }
 }

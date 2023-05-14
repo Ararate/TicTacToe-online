@@ -12,6 +12,7 @@
           "Microsoft.EntityFrameworkCore": "7.0.5",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.5",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.5",
+          "SignalRSwaggerGen": "4.4.0",
           "Swashbuckle.AspNetCore": "6.2.3",
           "System.IdentityModel.Tokens.Jwt": "6.30.0"
         },
@@ -471,6 +472,26 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {
             "assemblyVersion": "2.2.0.0",
             "fileVersion": "2.2.1.1"
+          }
+        }
+      },
+      "SignalRSwaggerGen/4.4.0": {
+        "dependencies": {
+          "SignalRSwaggerGen.Core": "1.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3"
+        },
+        "runtime": {
+          "lib/netstandard2.1/SignalRSwaggerGen.dll": {
+            "assemblyVersion": "4.4.0.0",
+            "fileVersion": "4.4.0.0"
+          }
+        }
+      },
+      "SignalRSwaggerGen.Core/1.0.0": {
+        "runtime": {
+          "lib/netstandard2.1/SignalRSwaggerGen.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -1057,6 +1078,20 @@
       "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
+    "SignalRSwaggerGen/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DruMT9W2uzFayeuYtsPMyIynUyh8mZiPtckxkXK/VOiLILCxWUlBxFleUeb2SIZwLS97VFQ0i7uv4ghUq6e4aw==",
+      "path": "signalrswaggergen/4.4.0",
+      "hashPath": "signalrswaggergen.4.4.0.nupkg.sha512"
+    },
+    "SignalRSwaggerGen.Core/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Sx9hZXXqE9ynul/uRofVm4e9SqJYm5CpXgZJI/w0Hog6SLYuDHc0pO7SE6pUztbeYb6p2QZOQ7pG/mFFpDPUlA==",
+      "path": "signalrswaggergen.core/1.0.0",
+      "hashPath": "signalrswaggergen.core.1.0.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.2.3": {
       "type": "package",

@@ -17,6 +17,10 @@ using System.Text;
 using TTT.Utility;
 using TTT.Services;
 using TTT.Hubs;
+using Microsoft.AspNetCore.Http.Connections;
+using TTT.Models;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 
 namespace TTT
 {
@@ -26,21 +30,47 @@ namespace TTT
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddTransient<JwtGenerator>();
-            builder.Services.AddTransient<MD5Encoding>();
-            builder.Services.AddSingleton<GameService>();
 
-            //builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+                options.ClientTimeoutInterval = TimeSpan.FromMinutes(5);
+            });
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(o =>
+            {
+                o.AddSignalRSwaggerGen();
+                o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                o.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
             string? connString = builder.Configuration.GetConnectionString("conn1");
-            builder.Services.AddDbContext<Context>(options=>
+            builder.Services.AddDbContext<DataBase>(options=>
                 options.UseSqlServer(connString));
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
+                .AddJwtBearer(o =>
                 {
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                    o.TokenValidationParameters = new TokenValidationParameters()
                     {
                         ValidateIssuer = true,
                         ValidIssuer = LC.JwtIssuer,
@@ -51,7 +81,13 @@ namespace TTT
                         ValidateIssuerSigningKey = true,
                     };
                 }
+
             );
+
+            builder.Services.AddTransient<JwtGenerator>();
+            builder.Services.AddTransient<MD5Encoding>();
+            builder.Services.AddScoped<GameService>();
+            builder.Services.AddSingleton<List<Game>>();
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -65,9 +101,8 @@ namespace TTT
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
-            //app.MapHub<GameHub>("/hub");
+            app.MapHub<GameHub>("/hub");
 
             app.Run();
         }

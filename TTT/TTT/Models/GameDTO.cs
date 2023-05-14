@@ -3,21 +3,14 @@
 {
     public class GameDTO
     {
+        public bool Error { get; set; } = false;
         public string Message { get; set; }
         public string Opponent { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-
-        public GameDTO(int x, int y, string status = null, string opponent = null)
+        public GameResult GameResult { get; set; }
+        public GameDTO()
         {
-            X = x;
-            Y = y;
-            Message = status;
-            Opponent = opponent;
-        }
-        public GameDTO(string message)
-        {
-            Message = message;
         }
 
     }

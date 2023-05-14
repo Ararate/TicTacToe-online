@@ -1,11 +1,37 @@
 {
   "Version": 1,
-  "Hash": "3ooWwsGHsVt1yMmAiqZbvULBh9dZre0aCa1e6elMI5M=",
+  "Hash": "H1P0CN065O6U82f/HBdr85xZbJqHRR2D5yL1VAtSpUA=",
   "Source": "TTT",
   "BasePath": "_content/TTT",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "TTT\\wwwroot",
+      "Source": "TTT",
+      "ContentRoot": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\",
+      "BasePath": "_content/TTT",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\Index.html",
+      "SourceId": "TTT",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\",
+      "BasePath": "_content/TTT",
+      "RelativePath": "Index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Index.html"
+    }
+  ]
 }

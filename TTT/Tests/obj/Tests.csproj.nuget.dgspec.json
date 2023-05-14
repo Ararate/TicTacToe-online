@@ -139,6 +139,10 @@
               "target": "Package",
               "version": "[7.0.5, )"
             },
+            "SignalRSwaggerGen": {
+              "target": "Package",
+              "version": "[4.4.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
