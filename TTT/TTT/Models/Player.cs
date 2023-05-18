@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TTT.Utility;
 #nullable disable
@@ -17,5 +18,7 @@ namespace TTT.Models
         public string Name { get; set; }
         [Required]
         public string Password { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTime RefreshExpireTime { get; set; }
     }
 }

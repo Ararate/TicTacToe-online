@@ -6,7 +6,6 @@ using TTT.Models;
 
 namespace TTT.Hubs
 {
-    [Authorize]
     [SignalRHub]
     public class GameHub : Hub
     {

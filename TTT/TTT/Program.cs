@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using TTT.Models;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace TTT
 {
@@ -81,10 +82,9 @@ namespace TTT
                         ValidateIssuerSigningKey = true,
                     };
                 }
-
             );
 
-            builder.Services.AddTransient<JwtGenerator>();
+            builder.Services.AddTransient<JwtService>();
             builder.Services.AddTransient<MD5Encoding>();
             builder.Services.AddScoped<GameService>();
             builder.Services.AddSingleton<List<Game>>();
@@ -103,6 +103,7 @@ namespace TTT
 
             app.MapControllers();
             app.MapHub<GameHub>("/hub");
+            app.UseStaticFiles();
 
             app.Run();
         }

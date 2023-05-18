@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "H1P0CN065O6U82f/HBdr85xZbJqHRR2D5yL1VAtSpUA=",
+  "Hash": "T3Fm3PVg6V74YMgRhVlr9ZtLTvvLKHXY7kcgjkPP7/o=",
   "Source": "TTT",
   "BasePath": "_content/TTT",
   "Mode": "Default",
@@ -32,6 +32,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Index.html"
+    },
+    {
+      "Identity": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\JavaScript.js",
+      "SourceId": "TTT",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\",
+      "BasePath": "_content/TTT",
+      "RelativePath": "JavaScript.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\JavaScript.js"
+    },
+    {
+      "Identity": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\Login.html",
+      "SourceId": "TTT",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\",
+      "BasePath": "_content/TTT",
+      "RelativePath": "Login.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Login.html"
+    },
+    {
+      "Identity": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\Menu.html",
+      "SourceId": "TTT",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\",
+      "BasePath": "_content/TTT",
+      "RelativePath": "Menu.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Menu.html"
     }
   ]
 }

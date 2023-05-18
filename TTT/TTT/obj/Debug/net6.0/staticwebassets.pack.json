@@ -5,6 +5,18 @@
       "PackagePath": "staticwebassets\\Index.html"
     },
     {
+      "Id": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\JavaScript.js",
+      "PackagePath": "staticwebassets\\JavaScript.js"
+    },
+    {
+      "Id": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\Login.html",
+      "PackagePath": "staticwebassets\\Login.html"
+    },
+    {
+      "Id": "D:\\TicTacToe\\TTT\\TTT\\wwwroot\\Menu.html",
+      "PackagePath": "staticwebassets\\Menu.html"
+    },
+    {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.TTT.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

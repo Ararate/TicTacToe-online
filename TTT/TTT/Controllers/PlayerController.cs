@@ -16,9 +16,9 @@ namespace TTT.Controllers
     public class PlayerController : Controller
     {
         private readonly DataBase _context;
-        private readonly JwtGenerator _jwtGenerator;
+        private readonly JwtService _jwtGenerator;
         private readonly MD5Encoding _md5;
-        public PlayerController(DataBase context, JwtGenerator generator, MD5Encoding md5Encoding)
+        public PlayerController(DataBase context, JwtService generator, MD5Encoding md5Encoding)
         {
             _context = context;
             _jwtGenerator = generator;

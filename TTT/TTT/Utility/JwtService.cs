@@ -5,10 +5,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System;
 using System.Text;
+using TTT.Models;
+using System.Security.Cryptography;
 
 namespace TTT.Utility
 {
-    public class JwtGenerator
+    public class JwtService
     {
         public string GetToken(string username)
         {
@@ -24,6 +26,15 @@ namespace TTT.Utility
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+        public string GetRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
     }
 }

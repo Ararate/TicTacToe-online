@@ -29,8 +29,8 @@ namespace TTT.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("CreateGame")]
-        public IActionResult CreateGame() 
+        [Route("Create")]
+        public IActionResult Create() 
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             if (claimsIdentity == null)
@@ -45,8 +45,8 @@ namespace TTT.Controllers
         }
         [Authorize]
         [HttpDelete]
-        [Route("DeleteGame")]
-        public async Task<IActionResult> DeleteGame()
+        [Route("Delete")]
+        public async Task<IActionResult> Delete()
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             if (claimsIdentity == null)
