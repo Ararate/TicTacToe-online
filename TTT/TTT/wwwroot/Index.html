@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        th, tr {
+            border: 1px solid black;
+            font-size: 80px;
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <title>Крестики нолики</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th><a id="0-0"></a></th>
+            <th><a id="0-1"></a></th>
+            <th><a id="0-2"></a></th>
+        </tr>          
+        <tr>           
+            <th><a id="1-0"></a></th>
+            <th><a id="1-1"></a></th>
+            <th><a id="1-2"></a></th>
+        </tr>   
+        <tr>    
+            <th><a id="2-0"></a></th>
+            <th><a id="2-1"></a></th>
+            <th><a id="2-2"></a></th>
+        </tr>
+    </table>
+    <script href="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("GameHub")
+            .build();
+    </script>
+</body>
+</html>

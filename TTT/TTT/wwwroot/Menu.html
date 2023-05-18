@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        .row {
+            float: left;
+        }
+        .room{
+            border:2px;
+            margin:5px;
+            border-radius:20px;
+        }
+    </style>
+</head>
+<body style="width:300px; margin-left:50px">
+    <h2>Список комнат</h2><br />
+    <div class="row" id="buttons">
+        <button id="refresh">Обновить</button>
+        <button id="create" style="margin-left:20px">Создать свою</button>
+    </div><br/><hr />
+    <span id="result"></span><br />
+    <div id="rooms">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("GameHub")
+            .build(); 
+        if (!sessionStorage.getItem("tokenKey"))
+            document.body.innerHTML = "<b>Необходима <a href='Login.html'>авторизация</a></b>"
+        else {
+            document.getElementById("refresh").addEventListener("click", async () => await refresh());
+            refresh();
+        }
+        document.getElementById("create").addEventListener("click", async () => {
+            const response = await fetch("Game/Create", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("tokenKey") }
+            });
+            document.getElementById("result").innerHTML = "";
+            const data = await response.json();
+            if (response.ok === true) {
+                document.getElementById("result").innerHTML = data;
+                document.getElementById("create").disabled = false;
+            }
+            else {
+                document.getElementById("result").innerHTML = data;
+            }
+        });
+
+        async function refresh() {
+            const response = await fetch("Game/GetRooms", {
+                method: "GET",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" }
+            });
+            
+            var roomList = document.getElementById("rooms");
+            const data = await response.json();
+            if (response.ok === true) {
+                roomList.innerHTML = "";
+                for (var i = 0; i < data.length; i++) {
+                    roomList.innerHTML += "<div class = 'room'><b>" + data[i].hostName + "</b><button style='margin-left: 20px'>Присоединиться</button></div>";
+                }
+                if (roomList.innerHTML == "")
+                    roomList.innerHTML = "<b>Пусто</b>"; 
+            }
+            else {
+                document.getElementById("result").innerHTML = "";
+                document.getElementById("result").innerHTML = data;
+                roomList.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>
