@@ -1,4 +1,7 @@
-﻿namespace TTT
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+namespace TTT
 {
     public static class LC
     {
@@ -9,7 +12,8 @@
         public const char O = '0';
         public const char X = 'X';
 
-        public const string HubMethodGetData = "GetGameData";
-        public const string HubMethodGetGuest = "GetGuest";
+        public const string HubMethodGetData = "GetGameData";//(X,Y)
+        public const string HubMethodFinish = "FinishGame";//(Results)
+        public const string HubMethodGetGuest = "GetGuest";//(Mover)
     }
 }

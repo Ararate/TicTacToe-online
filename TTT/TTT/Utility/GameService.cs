@@ -19,68 +19,63 @@ namespace TTT.Services
 {
     public class GameService
     {
-        private readonly List<Game> _games;
+        private readonly GamesData _gamesData;
         private readonly IHubContext<GameHub> _hub;
         private readonly DataBase _db;
 
-        public GameService(IHubContext<GameHub> hubContext, DataBase db, List<Game> games)
+        public GameService(IHubContext<GameHub> hubContext, DataBase db, GamesData games)
         {
             _hub = hubContext;
             _db = db;
-            _games = games;
+            _gamesData = games;
         }
 
         public ServiceResponse Create(string hostName)
         {
-            if (_games.FirstOrDefault(x => x.Host == hostName || x.Guest == hostName) != null)
+            if (_gamesData.Games.FirstOrDefault(x => x.Host == hostName || x.Guest == hostName) != null)
                 return new ServiceResponse(ResponseType.BadRequest, "Комната уже создана");
-            Game newGame = new() { 
-                Host = hostName 
-            };
-            _games.Add(newGame);
+            Game newGame = new(hostName);
+            newGame.Timeout.Elapsed += (o,e) => _gamesData.Games.Remove(newGame);
+            _gamesData.Games.Add(newGame);
             return new ServiceResponse(ResponseType.Success);
         }
 
         public async Task<ServiceResponse> Delete(string hostName)
         {
-            Game? game = _games.FirstOrDefault(x => x.Host == hostName);
+            Game? game = _gamesData.Games.FirstOrDefault(x => x.Host == hostName);
             if (game == null) 
                 return new ServiceResponse(ResponseType.NotFound, "Комната не найдена");
 
-            _games.Remove(game);
-            GameDTO dto = new GameDTO() { Message = "Игра удалена" };
-            if (!string.IsNullOrEmpty(game.Guest))
-                await _hub.Clients.User(game.Guest)
-                    .SendAsync(LC.HubMethodGetData, dto);
+            _gamesData.Games.Remove(game);
+            await TrySendAsync(game.Guest, LC.HubMethodGetData, new GameDTO() { Message = "Игра удалена" });
             return new ServiceResponse(ResponseType.Success);
         }
 
         public List<Game> GetRooms()
         {
-            return _games;
+            return _gamesData.Games;
         }
 
         public async Task<ServiceResponse> Join(string hostName, string guestName)
         {
-            Game? game = _games.FirstOrDefault(x => x.Host == hostName);
+            Game? game = _gamesData.Games.FirstOrDefault(x => x.Host == hostName);
             if (game == null)
                 return new ServiceResponse(ResponseType.NotFound, "Комната отсутствует");
-            if (game.Guest != null)
+            if (game.Guest != "")
                 return new ServiceResponse(ResponseType.BadRequest, "Комната занята");
-            if (_games.FirstOrDefault(x => x.Guest == guestName || x.Host == guestName) != null)
+            if (_gamesData.Games.FirstOrDefault(x => x.Guest == guestName || x.Host == guestName) != null)
                 return new ServiceResponse(ResponseType.BadRequest, "Вы уже участвуете в игре");
 
             game.Guest = guestName;
             Random rand = new();
-            game.CurrentMover = rand.Next(1, 2) == 1 ? game.Guest : game.Host;
-            await _hub.Clients.User(hostName)
-                .SendAsync(LC.HubMethodGetGuest, new GameDTO() { Opponent = guestName });
+            game.CurrentMover = rand.Next(1, 3) == 1 ? game.Guest : game.Host;
+            await TrySendAsync(game.Host, LC.HubMethodGetGuest, new GameDTO() { Mover = game.CurrentMover });
             return new ServiceResponse(ResponseType.Success, data: game);
         }
 
         public async Task<ServiceResponse> Move(string moverName, int x, int y)
         {
-            IEnumerable<Game> games = _games.Where(x => x.Host == moverName || x.Guest == moverName);
+            IEnumerable<Game> games = _gamesData.Games.Where(x => x.Host == moverName || x.Guest == moverName);
             if (!games.Any())
                 return new ServiceResponse(ResponseType.NotFound, "Вы не состоите в игре");
             if (games.Count() > 1 || games.First().Host == games.First().Guest)
@@ -97,10 +92,10 @@ namespace TTT.Services
                 return new ServiceResponse(ResponseType.BadRequest, "Клетка уже занята");
             game.Field[x,y] = symbol;
 
-            bool mainDiag = Has3InRow(game.Field.GetMainDiag(x, y));
-            bool antiDiag = Has3InRow(game.Field.GetAntiDiag(x, y));
-            bool row = Has3InRow(game.Field.GetRow(y));
-            bool col = Has3InRow(game.Field.GetColumn(x));
+            bool mainDiag = game.Field.GetMainDiag(x, y).Has3InRow();
+            bool antiDiag = game.Field.GetAntiDiag(x, y).Has3InRow();
+            bool row = game.Field.GetRow(x).Has3InRow();
+            bool col = game.Field.GetColumn(y).Has3InRow();
 
             if (row || col || mainDiag || antiDiag)
             {
@@ -113,10 +108,9 @@ namespace TTT.Services
                 };
                 _db.Add(results);
                 _db.SaveChanges();
-                await _hub.Clients.User(game.Guest)
-                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
-                await _hub.Clients.User(game.Host)
-                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
+                _gamesData.Games.Remove(game);
+                await TrySendAsync(game.Guest, LC.HubMethodFinish, new GameDTO() { GameResult = results });
+                await TrySendAsync(game.Host, LC.HubMethodFinish, new GameDTO() { GameResult = results });
                 return new ServiceResponse(ResponseType.Success, data: game);
             }
 
@@ -131,24 +125,25 @@ namespace TTT.Services
                 };
                 _db.Add(results);
                 _db.SaveChanges();
-                await _hub.Clients.User(game.Guest)
-                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
-                await _hub.Clients.User(game.Host)
-                    .SendAsync(LC.HubMethodGetData, new GameDTO() { GameResult = results });
+                _gamesData.Games.Remove(game);
+                await TrySendAsync(game.Guest, LC.HubMethodFinish, new GameDTO() { GameResult = results });
+                await TrySendAsync(game.Host, LC.HubMethodFinish, new GameDTO() { GameResult = results });
                 return new ServiceResponse(ResponseType.Draw, data: game);
             }
             game.CurrentMover = moverName == game.Host ? game.Guest : game.Host;
-            await _hub.Clients.User(game.CurrentMover)
-                .SendAsync(LC.HubMethodGetData, new GameDTO() { X=x,Y=y,Opponent=moverName });
+            await TrySendAsync(game.CurrentMover, LC.HubMethodGetData, 
+                new GameDTO() { 
+                  X = x, 
+                  Y = y, 
+                });
             return new ServiceResponse(ResponseType.Continue, data: game);
         }
 
-        private bool Has3InRow(char[] row)
+        private async Task TrySendAsync(string receiver, string method, GameDTO data)
         {
-            for (int i = 0; i < row.Length - 2; i++)
-                if (row[i] == row[i + 1] && row[i] == row[i + 2])
-                    return true;
-            return false;
+            if (_gamesData.Connections.TryGetValue(receiver, out _))
+                await _hub.Clients.Client(_gamesData.Connections[receiver])
+                    .SendAsync(method, data);
         }
     }
 }

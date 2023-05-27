@@ -12,11 +12,11 @@
 <body>
     <form method="post">
         <label for="name">Имя:</label><br>
-        <input type="text" id="name" name="name" /><br>
+        <input type="text" id="name" name="name" value="Ararate"/><br>
         <span id="name-error" class="red"></span><br />
 
         <label for="password">Пароль:</label><br>
-        <input type="password" id="password" name="password" /><br />
+        <input type="password" id="password" name="password" value="Ararate"/><br />
         <span id="password-error" class="red"></span><br />
 
         <input type="button" id="reg" value="регистрация" />
@@ -24,7 +24,7 @@
     </form>
     <span id="result"></span>
 <script>
-        document.getElementById("reg").addEventListener("click", async e => {
+    document.getElementById("reg").addEventListener("click", async e => {
         e.preventDefault();
         document.getElementById("name-error").innerHTML = "";
         document.getElementById("password-error").innerHTML = "";
@@ -56,18 +56,21 @@
         document.getElementById("name-error").innerHTML = "";
         document.getElementById("password-error").innerHTML = "";
         document.getElementById("result").innerHTML = "";
+        const name = document.getElementById("name").value;
         const response = await fetch("Player/Login", {
             method: "POST",
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
             body: JSON.stringify({
-                "name": document.getElementById("name").value,
+                "name": name,
                 "password": document.getElementById("password").value
             })
         });
         const data = await response.json();
         if (response.ok === true) {
             document.getElementById("result").innerHTML = data;
-            sessionStorage.setItem("tokenKey", data);
+            sessionStorage.setItem("tokenKey", data.accessToken);
+            sessionStorage.setItem("refreshKey", data.refreshToken);
+            sessionStorage.setItem("name", name);
             window.location.href = "Menu.html";
         }
         else {

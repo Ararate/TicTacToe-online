@@ -2,10 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Выбор соперника</title>
     <style>
         .row {
             float: left;
+            padding-left:20px;
         }
         .room{
             border:2px;
@@ -19,34 +20,88 @@
     <div class="row" id="buttons">
         <button id="refresh">Обновить</button>
         <button id="create" style="margin-left:20px">Создать свою</button>
+        <button id="cancel" hidden>Отмена</button>
     </div><br/><hr />
     <span id="result"></span><br />
     <div id="rooms">
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr/dist/browser/signalr.min.js"></script>
     <script>
-        const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl("GameHub")
-            .build(); 
         if (!sessionStorage.getItem("tokenKey"))
             document.body.innerHTML = "<b>Необходима <a href='Login.html'>авторизация</a></b>"
-        else {
-            document.getElementById("refresh").addEventListener("click", async () => await refresh());
-            refresh();
-        }
-        document.getElementById("create").addEventListener("click", async () => {
-            const response = await fetch("Game/Create", {
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("GameHub")
+            .build();
+        hubConnection.on("GetGuest", (dto) => {
+            sessionStorage.setItem("Mover", dto.mover);
+            window.location.href = "Index.html";
+        });
+        hubConnection.start()
+            .then(() =>
+                hubConnection.invoke("GetConnectionId", sessionStorage.getItem("tokenKey")));
+
+        
+        const createBtn = document.getElementById("create");
+        const refreshBtn = document.getElementById("refresh");
+        const resultSpan = document.getElementById("result");
+        const roomsDiv = document.getElementById("rooms");
+        const cancelBtn = document.getElementById("cancel");
+
+        
+
+        refreshBtn.addEventListener("click", async () => await refresh());
+        refresh();
+
+
+        createBtn.addEventListener("click", async () => {
+            var response = await fetch("Game/Create", {
                 method: "POST",
-                headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("tokenKey") }
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + sessionStorage.getItem("tokenKey")
+                }
             });
-            document.getElementById("result").innerHTML = "";
-            const data = await response.json();
+            if (response.headers.has("Www-Authenticate")) {
+                response = await fetch("Player/RefreshTokens", {
+                    method: "PUT",
+                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "accessToken": sessionStorage.getItem("tokenKey"),
+                        "refreshToken": sessionStorage.getItem("refreshKey")
+                    })
+                });
+                var data = await response.json();
+                sessionStorage.setItem("tokenKey", data.accessToken);
+                sessionStorage.setItem("refreshKey", data.refreshToken);
+                response = await fetch("Game/Create", {
+                    method: "POST",
+                    headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("tokenKey") }
+                });
+            }
+            resultSpan.innerHTML = "";
+            var data = await response.json();
             if (response.ok === true) {
-                document.getElementById("result").innerHTML = data;
-                document.getElementById("create").disabled = false;
+                resultSpan.innerHTML = data;
+                createBtn.disabled = true;
+                cancelBtn.hidden = false;
             }
             else {
-                document.getElementById("result").innerHTML = data;
+                resultSpan.innerHTML = data;
+            }
+        });
+
+        cancelBtn.addEventListener("click", async () => {
+            response = await fetch("Game/Delete", {
+                method: "DELETE",
+                headers: { "Accept": "application/json", "Content-Type": "application/json", "Authorization": "Bearer " + sessionStorage.getItem("tokenKey") }
+            });
+            if (response.ok === true) {
+                createBtn.disabled = false;
+                cancelBtn.hidden = true;
+            }
+            else {
+                resultSpan.innerHTML = response.json();
             }
         });
 
@@ -56,21 +111,60 @@
                 headers: { "Accept": "application/json", "Content-Type": "application/json" }
             });
             
-            var roomList = document.getElementById("rooms");
             const data = await response.json();
             if (response.ok === true) {
-                roomList.innerHTML = "";
+                roomsDiv.innerHTML = "";
                 for (var i = 0; i < data.length; i++) {
-                    roomList.innerHTML += "<div class = 'room'><b>" + data[i].hostName + "</b><button style='margin-left: 20px'>Присоединиться</button></div>";
+                    roomsDiv.innerHTML += "<div class = 'room'><b>" + data[i].hostName + "</b><button style='margin-left: 20px' onclick='Join(\"" + data[i].hostName +"\")'>Присоединиться</button></div>";
                 }
-                if (roomList.innerHTML == "")
-                    roomList.innerHTML = "<b>Пусто</b>"; 
+                if (roomsDiv.innerHTML == "")
+                    roomsDiv.innerHTML = "<b>Пусто</b>"; 
             }
             else {
-                document.getElementById("result").innerHTML = "";
-                document.getElementById("result").innerHTML = data;
-                roomList.innerHTML = "";
+                resultSpan.innerHTML = "";
+                resultSpan.innerHTML = data;
+                roomsDiv.innerHTML = "";
             }
+        }
+
+        async function Join(hostname) {
+            var response = await fetch("Game/JoinRoom", {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization":
+                    "Bearer " + sessionStorage.getItem("tokenKey"),
+                    "hostName": hostname
+                }
+            });
+            if (response.headers.has("Www-Authenticate")) {
+                response = await fetch("Player/RefreshTokens", {
+                    method: "PUT",
+                    headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "accessToken": sessionStorage.getItem("tokenKey"),
+                        "refreshToken": sessionStorage.getItem("refreshKey")
+                    })
+                });
+                data = await response.json();
+                sessionStorage.setItem("tokenKey", data.accessToken);
+                sessionStorage.setItem("refreshKey", data.refreshToken);
+                response = await fetch("Game/Join", {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "Authorization":
+                            "Bearer " + sessionStorage.getItem("tokenKey"),
+                        "hostName": hostname
+                    }
+                });
+                data = await response.json();
+            }
+            var data = await response.json();
+            sessionStorage.setItem("Mover", data.mover);
+            window.location.href = "Index.html";
         }
     </script>
 </body>

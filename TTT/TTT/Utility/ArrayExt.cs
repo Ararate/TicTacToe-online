@@ -39,21 +39,11 @@ namespace TTT.Utility
             if (array == null)
                 throw new ArgumentNullException("array");
 
-            int cols = array.GetLength(1);
             int rows = array.GetLength(0);
             T[] result = new T[rows];
 
-            int size;
-
-            if (typeof(T) == typeof(bool))
-                size = 1;
-            else if (typeof(T) == typeof(char))
-                size = 2;
-            else
-                size = Marshal.SizeOf<T>();
-            int offset = size * col;
             for (int i = 0; i < rows; i++)
-                Buffer.BlockCopy(array, i * cols * size + offset, result, i * size, size);
+                result[i] = array[i,col];
 
             return result;
         }
@@ -85,6 +75,14 @@ namespace TTT.Utility
             for (int i = 0; i < length; i++)
                 res[length- i-1] = array[tx + i, ty - i];
             return res;
+        }
+        public static bool Has3InRow(this char[] row)
+        {
+            if (row.Length < 3) return false;
+            for (int i = 0; i < row.Length - 2; i++)
+                if (row[i] != ' ' && row[i] == row[i + 1] && row[i] == row[i + 2])
+                    return true;
+            return false;
         }
     }
 }

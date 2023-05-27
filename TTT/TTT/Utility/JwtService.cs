@@ -19,7 +19,7 @@ namespace TTT.Utility
                 issuer: LC.JwtIssuer,
                 audience: LC.JwtAudience,
                 claims: claim,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(5)),
+                expires: DateTime.Now.Add(TimeSpan.FromMinutes(5)),
                 signingCredentials: new SigningCredentials
                     (new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LC.JwtSecretKey)), 
                     SecurityAlgorithms.HmacSha256)
@@ -35,6 +35,26 @@ namespace TTT.Utility
                 rng.GetBytes(randomNumber);
                 return Convert.ToBase64String(randomNumber);
             }
+        }
+        public string? GetName(string token)
+        {
+            TokenValidationParameters tokenValidationParameters = new()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = LC.JwtIssuer,
+                ValidateAudience = true,
+                ValidAudience = LC.JwtAudience,
+                ValidateLifetime = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LC.JwtSecretKey)),
+                ValidateIssuerSigningKey = true,
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            if (principal == null || securityToken == null)
+                return null;
+            var jwt = (JwtSecurityToken)securityToken;
+            return principal.FindFirstValue(ClaimTypes.Name);
         }
     }
 }

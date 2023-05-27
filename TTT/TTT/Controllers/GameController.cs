@@ -22,23 +22,23 @@ namespace TTT.Controllers
     public class GameController : Controller
     {
         private readonly GameService _gameService;
-        
-        public GameController(GameService gameService, IHubContext<GameHub> hubContext) 
+
+        public GameController(GameService gameService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
         }
         [Authorize]
         [HttpPost]
         [Route("Create")]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             if (claimsIdentity == null)
                 return BadRequest("Не авторизован");
 
             string name = claimsIdentity.FindFirst(ClaimTypes.Name).Value;
-            ServiceResponse resp= _gameService.Create(name);
-            if(resp.Status == ResponseType.NotFound || resp.Status == ResponseType.ServerError || resp.Status == ResponseType.BadRequest)
+            ServiceResponse resp = _gameService.Create(name);
+            if (resp.Status == ResponseType.NotFound || resp.Status == ResponseType.ServerError || resp.Status == ResponseType.BadRequest)
                 return BadRequest(resp.Message);
 
             return Ok("Игра создана, ожидайте соперника");
@@ -62,13 +62,13 @@ namespace TTT.Controllers
         [Route("GetRooms")]
         public IActionResult GetRooms()
         {
-            return Ok(_gameService.GetRooms().Where(x=> x.Guest == null).Select(x=>new {hostName = x.Host}));
+            return Ok(_gameService.GetRooms().Where(x => x.Guest == "").Select(x => new { hostName = x.Host }));
         }
 
         [Authorize]
         [HttpGet]
         [Route("JoinRoom")]
-        public async Task<IActionResult> JoinRoom(string hostName)
+        public async Task<IActionResult> JoinRoom([FromHeader] string hostName)
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             if (claimsIdentity == null)
@@ -78,19 +78,19 @@ namespace TTT.Controllers
             ServiceResponse resp = await _gameService.Join(hostName, name);
             if (resp.Status == ResponseType.NotFound || resp.Status == ResponseType.ServerError || resp.Status == ResponseType.BadRequest)
                 return BadRequest(resp.Message);
-            return Ok(new { Opponent = resp.Data.Host });
+            return Ok(new { Mover = resp.Data.CurrentMover });
         }
         [Authorize]
         [HttpPost]
         [Route("MakeMove")]
-        public async Task<IActionResult> MakeMove(int x, int y)
+        public async Task<IActionResult> MakeMove(GameDTO dto)
         {
             ClaimsIdentity? claimsIdentity = (ClaimsIdentity?)User.Identity;
             if (claimsIdentity == null)
                 return Unauthorized();
             string name = claimsIdentity.FindFirst(ClaimTypes.Name).Value;
 
-            ServiceResponse resp = await _gameService.Move(name, x, y);
+            ServiceResponse resp = await _gameService.Move(name, dto.X, dto.Y);
 
             if (resp.Status == ResponseType.NotFound || resp.Status == ResponseType.ServerError || resp.Status == ResponseType.BadRequest)
                 return BadRequest(resp.Message);
