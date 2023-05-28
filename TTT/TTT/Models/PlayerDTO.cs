@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+#nullable disable
 namespace TTT.Models
 {
     public class PlayerDTO

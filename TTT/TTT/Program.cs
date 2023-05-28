@@ -41,6 +41,7 @@ namespace TTT
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(o =>
             {
+                o.SwaggerDoc("v1", new OpenApiInfo { Title = "TicTacToe", Version = "v1" });
                 o.AddSignalRSwaggerGen();
                 o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -82,23 +83,6 @@ namespace TTT
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(LC.JwtSecretKey)),
                         ValidateIssuerSigningKey = true,
                     };
-                    //o.Events = new JwtBearerEvents
-                    //{
-                    //    OnMessageReceived = context =>
-                    //    {
-                    //        var accessToken = context.Request.Query["access_token"];
-
-                    //        // If the request is for our hub...
-                    //        var path = context.HttpContext.Request.Path;
-                    //        if (!string.IsNullOrEmpty(accessToken) &&
-                    //            (path.StartsWithSegments("/GameHub")))
-                    //        {
-                    //            // Read the token out of the query string
-                    //            context.Token = accessToken;
-                    //        }
-                    //        return Task.CompletedTask;
-                    //    }
-                    //};
                 }
             );
 
@@ -108,12 +92,6 @@ namespace TTT
             builder.Services.AddSingleton<GamesData>();
             
             var app = builder.Build();
-
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
 
             app.UseHttpsRedirection();
 

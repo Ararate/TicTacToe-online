@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TTT</name>
+    </assembly>
+    <members>
+        <member name="T:TTT.Controllers.GameController">
+            <summary>
+            Игра
+            </summary>
+        </member>
+        <member name="M:TTT.Controllers.GameController.Create">
+            <summary>
+            Создать игру. При подключении гостя вызывает signalr метод GetGuest({string guestName})
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.GameController.Delete">
+            <summary>
+            Удалить игру
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.GameController.GetRooms">
+            <summary>
+            Получить список свободных комнат
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.GameController.GetField">
+            <summary>
+            Получить поле игры
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.GameController.JoinRoom(TTT.Models.GameDTO)">
+            <summary>
+            Присоединиться к игре
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.GameController.MakeMove(TTT.Models.GameDTO)">
+            <summary>
+            Сделать ход. Отправляет оппоненту signalr метод GetGameData({int x,int y}).
+            Если игра завершена, отправляет обоим игрокам signalr метод FinishGame({ gameResults {bool draw, string winner}})
+            </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TTT.Controllers.PlayerController">
+            <summary>
+            Авторизация и аутентификация
+            </summary>
+        </member>
+        <member name="M:TTT.Controllers.PlayerController.Register(TTT.Models.PlayerDTO)">
+            <summary>
+            Зарегистрировать аккаунт
+            </summary>
+            <param name="regData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TTT.Controllers.PlayerController.Login(TTT.Models.PlayerDTO)">
+            <summary>
+            Войти в аккаунт и получить токены
+            </summary>
+            <param name="regData"></param>
+            <returns>{accessToken, refreshToken}</returns>
+        </member>
+        <member name="M:TTT.Controllers.PlayerController.RefreshTokens(TTT.Models.TokensDTO)">
+            <summary>
+            Обновить токены 
+            </summary>
+            <param name="tokens"></param>
+            <returns>{accessToken, refreshToken}</returns>
+        </member>
+        <member name="T:TTT.Migrations._1">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations._1.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations._1.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations._1.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:TTT.Migrations.refreshTokens">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations.refreshTokens.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations.refreshTokens.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:TTT.Migrations.refreshTokens.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

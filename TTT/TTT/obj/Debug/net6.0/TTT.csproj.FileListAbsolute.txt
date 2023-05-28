@@ -89,3 +89,4 @@ D:\TicTacToe\TTT\TTT\obj\Debug\net6.0\ref\TTT.dll
 D:\TicTacToe\TTT\TTT\bin\Debug\net6.0\SignalRSwaggerGen.dll
 D:\TicTacToe\TTT\TTT\bin\Debug\net6.0\SignalRSwaggerGen.Core.dll
 D:\TicTacToe\TTT\TTT\bin\Debug\net6.0\TTT.staticwebassets.runtime.json
+D:\TicTacToe\TTT\TTT\bin\Debug\net6.0\document.xml

@@ -9,7 +9,7 @@ namespace TTT
         public const string JwtAudience = "Client";
         public const string JwtSecretKey = @"oxmskwi4838_*&^/\%";
 
-        public const char O = '0';
+        public const char O = 'O';
         public const char X = 'X';
 
         public const string HubMethodGetData = "GetGameData";//(X,Y)

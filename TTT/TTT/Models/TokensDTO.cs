@@ -1,4 +1,5 @@
-﻿namespace TTT.Models
+﻿#nullable disable
+namespace TTT.Models
 {
     public class TokensDTO
     {

@@ -3,7 +3,8 @@
 {
     public class GameDTO
     {
-        public bool Error { get; set; } = false;
+        public char[,] Field;
+        public string HostName { get; set; }
         public string Message { get; set; }
         public string Mover { get; set; }
         public int X { get; set; }

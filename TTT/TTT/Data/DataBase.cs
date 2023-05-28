@@ -9,7 +9,7 @@ namespace TTT.Data
         public DbSet<Player> Players { get; set; }
         public DataBase(DbContextOptions options) : base(options)
         {
-
+            Database.EnsureCreated();
         }
     }
 }

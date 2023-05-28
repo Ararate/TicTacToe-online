@@ -19,7 +19,7 @@ namespace TTT.Models
 				for (int j = 0; j < Field.GetLength(1); j++)
 					Field[i, j] = ' ';
 			Host = host;
-			Timeout = new(TimeSpan.FromMinutes(2).TotalMilliseconds);
+			Timeout = new(TimeSpan.FromMinutes(5).TotalMilliseconds);
         }
 		public string Host { get; set; }
 		public string Guest { get; set; } = string.Empty;

@@ -129,14 +129,14 @@
 
         async function Join(hostname) {
             var response = await fetch("Game/JoinRoom", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     "Authorization":
                     "Bearer " + sessionStorage.getItem("tokenKey"),
-                    "hostName": hostname
-                }
+                },
+                body: JSON.stringify({"HostName": hostname})
             });
             if (response.headers.has("Www-Authenticate")) {
                 response = await fetch("Player/RefreshTokens", {
@@ -150,21 +150,26 @@
                 data = await response.json();
                 sessionStorage.setItem("tokenKey", data.accessToken);
                 sessionStorage.setItem("refreshKey", data.refreshToken);
-                response = await fetch("Game/Join", {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization":
-                            "Bearer " + sessionStorage.getItem("tokenKey"),
-                        "hostName": hostname
-                    }
-                });
+                response = await fetch("Game/JoinRoom", {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization":
+                    "Bearer " + sessionStorage.getItem("tokenKey"),
+                },
+                body: JSON.stringify({"HostName": hostname})
+            });
                 data = await response.json();
             }
             var data = await response.json();
-            sessionStorage.setItem("Mover", data.mover);
-            window.location.href = "Index.html";
+            if (response.ok === true){
+                sessionStorage.setItem("Mover", data.mover);
+                window.location.href = "Index.html";
+            }
+            else{
+                resultSpan.innerHTML = data;
+            }
         }
     </script>
 </body>
